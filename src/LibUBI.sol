@@ -2,10 +2,11 @@
 pragma solidity ^0.8.28;
 
 struct UBIStorage {
-    uint256 clamAmount; // 32 bytes
+    uint256 claimAmount; // 32 bytes
     address token; // 20 bytes
     mapping(address => bool) isVerified; //32 bytes
     mapping(address user => mapping(uint256 day => bool)) isClaimed; //32 bytes
+    address verifier;
 }
 
 library LibUBI {
@@ -25,8 +26,20 @@ library LibUBI {
         return getStorage().isVerified[_address];
     }
 
-    function isAuthorizedToClaim(UBIStorage storage s, address user) internal {
-        // return s.isVerified[user] || ;
+    /**
+     * @notice Calculates the current day based on the block timestamp.
+     * @dev The day is calculated as `block.timestamp / 1 days`.
+     * @return The current day number.
+     */
+    function currentDay() public view returns (uint256) {
+        return block.timestamp / 1 days;
+    }
+
+    function isAuthorizedToClaim(
+        UBIStorage storage s,
+        address user
+    ) internal returns (bool) {
+        return s.isVerified[user] || s.isClaimed[user][currentDay()];
     }
 
     // fallback() external payable {
