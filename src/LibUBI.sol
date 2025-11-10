@@ -3,10 +3,9 @@ pragma solidity ^0.8.28;
 
 struct UBIStorage {
     uint256 clamAmount; // 32 bytes
-    address token;      // 20 bytes
+    address token; // 20 bytes
     mapping(address => bool) isVerified; //32 bytes
     mapping(address user => mapping(uint256 day => bool)) isClaimed; //32 bytes
-
 }
 
 library LibUBI {
@@ -27,7 +26,7 @@ library LibUBI {
     }
 
     function isAuthorizedToClaim(UBIStorage storage s, address user) internal {
-        return s.isVerified[user] || ;
+        // return s.isVerified[user] || ;
     }
 
     // fallback() external payable {
